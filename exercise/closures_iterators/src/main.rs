@@ -17,7 +17,7 @@ fn main() {
     let pairs = vec![(0, 1), (2, 3), (4, 5)];
     pairs
         .into_iter()
-        .map( |(x, y)| (x + 1, y)  )
+        .map(|(x, y)| (x + 1, y))
         .for_each(|t| println!("{:?}", t));
 
     // 3. Uncomment the code below. There is a mutable vector named `numbers`. Use an iterator over
@@ -27,7 +27,7 @@ fn main() {
 
     let mut numbers = vec![1, 2, 3, 4];
     for x in numbers.iter_mut() {
-         *x *= 3; // multiply the value by 3 via the mutable reference x
+        *x *= 3; // multiply the value by 3 via the mutable reference x
     }
     println!("{:?}", numbers); // should print [3, 6, 9, 12]
 
@@ -41,10 +41,10 @@ fn main() {
 
     let words = vec!["autobot", "beach", "car", "decepticon", "energon", "frothy"];
     let transformed: Vec<_> = words
-    .into_iter()
-    .filter(|f| !f.contains("h"))
-    .map(|num| num.to_uppercase())
-    .collect();  // do the stuff here
+        .into_iter()
+        .filter(|f| !f.contains('h'))
+        .map(|num| num.to_uppercase())
+        .collect(); // do the stuff here
     println!("Transformed: {:?}", transformed);
 
     // Challenge:
@@ -63,6 +63,4 @@ fn main() {
     let numbers = vec![1, 2, 3, 4];
     let transformed: Vec<_> = numbers.into_iter().map(|num| num * 3).collect();
     println!("{:?}", transformed);
-
-
 }
