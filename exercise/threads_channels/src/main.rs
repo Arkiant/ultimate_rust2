@@ -18,7 +18,7 @@ fn expensive_sum(v: Vec<i32>) -> i32 {
 fn main() {
     let my_vector = vec![2, 5, 1, 0, 4, 3];
 
-    // 1. Spawn a child thread and have it call `expensive_sum(my_vector)`.  Store the returned
+    // 1. Spawn a child thread and have it call `expensive_sum(my_vector)`. Store the returned
     // join handle in a variable called `handle`. Once you've done this you should be able to run
     // the code and see the output from the child thread's expensive sum in the middle of the main
     // thread's processing of letters.
@@ -79,8 +79,8 @@ fn main() {
         });
 
         // Using a Receiver channel as an iterator is a convenient way to get values until the channel
-        // gets closed.  A Receiver channel is automatically closed once all Sender channels have been
-        // closed.  Both our threads automatically close their Sender channels when they exit and the
+        // gets closed. A Receiver channel is automatically closed once all Sender channels have been
+        // closed. Both our threads automatically close their Sender channels when they exit and the
         // destructors for the channels get automatically called.
         for msg in rx {
             println!("Main thread: Received {}", msg);
@@ -90,10 +90,10 @@ fn main() {
         // - Use the thread handles to join both threads without getting any compiler warnings.
     */
 
-    // Challenge: Make two child threads and give them each a receiving end to a channel.  From the
+    // Challenge: Make two child threads and give them each a receiving end to a channel. From the
     // main thread loop through several values and print each out and then send it to the channel.
     // On the child threads print out the values you receive. Close the sending side in the main
-    // thread by calling `drop(tx)` (assuming you named your sender channel variable `tx`).  Join
+    // thread by calling `drop(tx)` (assuming you named your sender channel variable `tx`). Join
     // the child threads.
     println!("Main thread: Exiting.")
 }
