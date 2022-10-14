@@ -7,11 +7,12 @@
 /// let result = sploosh(1,2,3);
 /// assert_eq!(result, 4);
 /// ```
+#[inline]
 pub fn sploosh(x: i32, y: i32, z: i32) -> i32 {
     match (x, y, z) {
-        (x, _, _) if x < 0 => 99,
         (1, 2, 3) => 4,
         (5, 6, 7) => 3,
+        (x, _, _) if x < 0 => 99,
         (x, y, z) => x + y - z,
     }
 }
