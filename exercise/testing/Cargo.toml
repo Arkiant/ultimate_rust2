@@ -10,7 +10,7 @@ edition = "2021"
 # development dependency. Here is one way to do it:
 
 [dev-dependencies]
-criterion = { version = "0.3", features = ["html_reports"] }
+criterion = { version = "0.4.0", features = ["html_reports"] }
 
 # Challenge Help 2: Each benchmark needs a `[[bench]]` section with a name and disabling the harness.
 # A name "somename" will correspond with a file "benches/somename.rs"
