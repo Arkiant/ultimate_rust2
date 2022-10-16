@@ -1,6 +1,4 @@
-// Silence some warnings so they don't distract from the exercise.
-#![allow(dead_code, unused_imports, unused_variables)]
-use crossbeam::channel;
+use crossbeam::channel::{self, Receiver, Sender};
 use std::thread;
 use std::time::Duration;
 
@@ -23,10 +21,10 @@ fn main() {
     // the code and see the output from the child thread's expensive sum in the middle of the main
     // thread's processing of letters.
     //
-    //let handle = ...
+    let handle = thread::spawn(|| expensive_sum(my_vector));
 
     // While the child thread is running, the main thread will also do some work
-    for letter in vec!["a", "b", "c", "d", "e", "f"] {
+    for letter in ["a", "b", "c", "d", "e", "f"] {
         println!("Main thread: Processing the letter '{}'", letter);
         sleep_ms(200);
     }
@@ -37,17 +35,17 @@ fn main() {
     // to a variable named `result`
     // - Get the i32 out of `result` and store it in a `sum` variable.
 
-    // let result =
-    // let sum =
-    // println!("The child thread's expensive sum is {}", sum);
+    let result = handle.join();
+    let sum = result.unwrap();
+    println!("The child thread's expensive sum is {}", sum);
 
-    // 3. Time for some fun with channels!
-    // - Uncomment the block comment below (Find and remove the `/*` and `*/`).
-    // - Create variables `tx` and `rx` and assign them to the sending and receiving ends of an
-    // unbounded channel. Hint: An unbounded channel can be created with `channel::unbounded()`
+    {
+        // 3. Time for some fun with channels!
+        // - Uncomment the block comment below (Find and remove the `/*` and `*/`).
+        // - Create variables `tx` and `rx` and assign them to the sending and receiving ends of an
+        // unbounded channel. Hint: An unbounded channel can be created with `channel::unbounded()`
 
-    /*
-        // let ...
+        let (tx, rx) = channel::unbounded();
 
         // Cloning a channel makes another variable connected to that end of the channel so that you can
         // send it to another thread. We want another variable that can be used for sending...
@@ -62,7 +60,7 @@ fn main() {
 
         // Thread A
         let handle_a = thread::spawn(move || {
-            sleep_ms(0);
+            sleep_ms(100);
             tx2.send("Thread A: 1").unwrap();
             sleep_ms(200);
             tx2.send("Thread A: 2").unwrap();
@@ -88,12 +86,60 @@ fn main() {
 
         // 5. Oops, we forgot to join "Thread A" and "Thread B". That's bad hygiene!
         // - Use the thread handles to join both threads without getting any compiler warnings.
-    */
 
-    // Challenge: Make two child threads and give them each a receiving end to a channel. From the
-    // main thread loop through several values and print each out and then send it to the channel.
-    // On the child threads print out the values you receive. Close the sending side in the main
-    // thread by calling `drop(tx)` (assuming you named your sender channel variable `tx`). Join
-    // the child threads.
-    println!("Main thread: Exiting.")
+        handle_a.join().unwrap();
+        handle_b.join().unwrap();
+    }
+
+    {
+        // Challenge: Make two child threads and give them each a receiving end to a channel. From the
+        // main thread loop through several values and print each out and then send it to the channel.
+        // On the child threads print out the values you receive. Close the sending side in the main
+        // thread by calling `drop(tx)` (assuming you named your sender channel variable `tx`). Join
+        // the child threads.
+
+        let (tx, rx) = channel::unbounded();
+        let r = rx.clone();
+
+        let (tx2, rx2) = channel::unbounded();
+        let s = tx2.clone();
+
+        let handle1 = thread::spawn(|| process("Handle1", rx, s));
+        let handle2 = thread::spawn(|| process("Handle2", r, tx2));
+
+        for n in [10, 15, 16, 8, 9, 5] {
+            println!("[Main] send {} to the channel", n);
+            match tx.send(n) {
+                Ok(_) => {}
+                Err(e) => println!("[Main] some error occurried: {}", e),
+            };
+        }
+
+        drop(tx);
+
+        for value in rx2 {
+            println!("[Main] got value {}", value);
+        }
+
+        let _ = handle1.join();
+        let _ = handle2.join();
+    }
+
+    println!("[Main]: Exiting.")
+}
+
+fn process(name: &str, values: Receiver<i32>, result: Sender<i32>) {
+    for value in values {
+        println!("[{}]: received a value {}", name, value);
+        sleep_ms(300);
+        println!("[{}]: going to send a {:?}", name, value);
+
+        match result.send(value) {
+            Ok(_) => {}
+            Err(e) => {
+                println!("[{}]: An error occurried: {:?}", name, e);
+                break;
+            }
+        };
+    }
 }
