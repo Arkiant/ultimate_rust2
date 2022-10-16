@@ -1,7 +1,6 @@
-
 /// Returns the sum of x and y and the subtraction of z
 /// # Example
-/// 
+///
 /// ```
 /// # use testing::sploosh;
 /// let result = sploosh(1,2,3);
@@ -17,10 +16,9 @@ pub fn sploosh(x: i32, y: i32, z: i32) -> i32 {
     }
 }
 
-
 /// Returns a in negative plus 3 for b
 /// # Example
-/// 
+///
 /// ```
 /// # use testing::splish;
 /// let result = splish(9,3);

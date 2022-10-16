@@ -1,4 +1,4 @@
-use testing::{sploosh, splish};
+use testing::{splish, sploosh};
 
 #[test]
 fn test_splooshsplish() {
