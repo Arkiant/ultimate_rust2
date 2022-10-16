@@ -5,8 +5,7 @@
 // file)
 //
 // Hint: You need to update Cargo.toml to add the `log` dependency, first.
-use log::{error, warn, info, debug, trace};
-
+use log::{debug, error, info, trace, warn};
 
 #[derive(Debug)]
 pub struct Frog {
